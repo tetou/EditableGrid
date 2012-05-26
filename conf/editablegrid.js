@@ -111,10 +111,10 @@ function EditableGrid(name, config) { if (name) this.init(name, config); }
 /**
  * Default properties
  */ 
-EditableGrid.prototype.enableSort = true;
+EditableGrid.prototype.enableSort = false;
 EditableGrid.prototype.enableStore = true;
 EditableGrid.prototype.doubleclick = false;
-EditableGrid.prototype.editmode = "absolute"
+EditableGrid.prototype.editmode = "static"
 EditableGrid.prototype.editorzoneid = "";
 EditableGrid.prototype.allowSimultaneousEdition = false;
 EditableGrid.prototype.saveOnBlur = true;
