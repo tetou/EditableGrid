@@ -101,6 +101,7 @@
     <script type="text/javascript" src="./conf/editablegrid_validators.js"></script>
     <script type="text/javascript">
     	<!--
+    		
     		window.onload=function(){
 				editableGrid = new EditableGrid("DemoGrid",{
 					modelChanged: function(rowIdx, colIdx, oldValue, newValue, row){
@@ -177,7 +178,26 @@
 					);
 					editableGrid.attachToHTMLTable('htmlgrid');
 					editableGrid.renderGrid();
+					
+					selectRow(objectNum);
 				});
+				
+				selectRow(objectNum);
+    		}
+    		
+    		//Here is a code to fix the row which will be operated in some way.
+    		function selectRow(num){
+				for (i=1;i<=num;i++){
+					$("#htmlgrid tr#R"+i+" td:first").click(function(i){
+						//alert($(this).get()[0].firstChild.nodeValue);
+						k = $(this).parent().get()[0].getElementsByTagName("td").length;
+						for (j=0;j<k;j++){
+							$(this).parent().get()[0].getElementsByTagName("td")[j].style.backgroundColor = "yellow";
+						}
+						$(this).parent().children().unbind("mouseover");//Getting rid of the mouseover event from <td> elements of each row.
+						$(this).parent().children().unbind("mouseout");//Getting rid of the mouseout event from <td> elements of each row.
+					});
+				}
     		}
     	//-->
     </script>
