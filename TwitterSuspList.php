@@ -45,14 +45,14 @@
 	$batchAPI="http://".$apiHostName."/Java/".$aplName."/Twitter/isSuspendedFriend?";
 	
 	//クエリ文字列作成
-	$keyReal=10*($key-1);
+	$keyReal=100*($key-1);
 	$batchQuery="num=".$keyReal;
 	
 	//問い合わせ
 	$batchXml=simplexml_load_file($batchAPI.$batchQuery);
 	$batchObj=$batchXml->RESPONSE[0];
 	if ($batchObj->CODE=="OK"){
-		$key_f=10*($key-2);
+		$key_f=100*($key-2);
 		$batchQuery_f="num=".$key_f;
 		$batchXml_f=simplexml_load_file($batchAPI.$batchQuery_f);
 		$batchXml_fObj=$batchXml_f->RESPONSE[0];
@@ -60,7 +60,7 @@
 			$frontFlg=false;
 		}
 		
-		$key_n=10*$key;
+		$key_n=100*$key;
 		$batchQuery_n="num=".$key_n;
 		$batchXml_n=simplexml_load_file($batchAPI.$batchQuery_n);
 		$batchXml_nObj=$batchXml_n->RESPONSE[0];
@@ -90,117 +90,151 @@
            <title>TwitterBot(サスペンドフォロワー検索)</title>
            <link rel="stylesheet" type="text/css" href="../diary1.css" />
 	   	   <link rel="SHORTCUT ICON" href="http://www.geocities.jp/chocola_blancmanche10/favicon.ico" />
-           <link rev="made" href="mailto:americachachacha@yahoo.co.jp" />       
+           <link rev="made" href="mailto:americachachacha@yahoo.co.jp" />
+           <style type="text/css">
+				.floatingHeader {
+				    position: fixed;
+				    top: 0;
+				    visibility: hidden;
+				}
+           </style>
+		    <script type="text/javascript" src="./conf/jquery-1.7.1.js"></script>
+		    <script type="text/javascript" src="./conf/editablegrid.js"></script>
+		    <script type="text/javascript" src="./conf/editablegrid_charts.js"></script>
+		    <script type="text/javascript" src="./conf/editablegrid_editors.js"></script>
+		    <script type="text/javascript" src="./conf/editablegrid_renderers.js"></script>
+		    <script type="text/javascript" src="./conf/editablegrid_utils.js"></script>
+		    <script type="text/javascript" src="./conf/editablegrid_validators.js"></script>
+		    <script type="text/javascript" src="./conf/jquery.persistentheaders.js"></script>
+		    <script type="text/javascript">
+		    	<!--
+		    	
+		    		var selectedRows = new Array();
+		    		
+		    		window.onload=function(){
+		    			
+						editableGrid = new EditableGrid("DemoGrid",{
+							modelChanged: function(rowIdx, colIdx, oldValue, newValue, row){
+								_$("message").innerHTML="rowIdx="+rowIdx+",colIdx="+colIdx+",oldValue="+oldValue+",newValue="+newValue+",row="+row;
+								$("#R"+(rowIdx+1)+" td:nth-child("+(colIdx+1)+")").css({backgroundColor:"lightgreen"});
+								$("#R"+(rowIdx+1)+" td:nth-child("+(colIdx+1)+")").unbind("mouseover");
+								$("#R"+(rowIdx+1)+" td:nth-child("+(colIdx+1)+")").unbind("mouseout");
+							}
+						}); 
+
+						// we build and load the metadata in Javascript
+						editableGrid.load(
+							{ metadata: [
+								{ name: "id", datatype: "string", editable: false },
+								{ name: "username", datatype: "string", editable: true },
+								{ name: "lastymd", datatype: "string", editable: true },
+								{ name: "reflectflg", datatype: "string", editable: true }
+								//If you do not want to affect a cell by EditableGrid, then you should comment out the corresponding JSON object from the source.
+								//{ name: "letuscheck", datatype: "string", editable: false }
+							]}
+						);
+
+						// then we attach to the HTML table and render it
+						editableGrid.attachToHTMLTable('htmlgrid');
+						editableGrid.renderGrid();
+						
+		    			//persistentHeader settings
+		    			$('#htmlgrid').persistentHeaders();
+						
+						//Here is a code to change the color of the cell on which one puts the mouse cursor.
+						<?php
+							$j=0;
+							for ($i=0;isset($batchObj->ITEM[$i]);$i++,$j++){}
+						?>
+						var objectNum = <?php echo $j; ?>;
+						for (i=1;i<=objectNum;i++){
+							$("#R"+i+" td").mouseover(function(){
+								$(this).css({backgroundColor:"#cccccc"});
+							});
+							$("#R"+i+" td").mouseout(function(){
+								$(this).css({backgroundColor:"#eeeeee"});
+							});
+						}
+						
+						//Here is a code to insert the next element <tr> to the table "htmlgrid".
+						$("#insertarow").click(function(){
+							//Insert the new row #R+objectNum below the row #R+(objectNum-1)
+							if (/^[A-Z][0-9]{5}$/.test($.trim($("#insertarow_id").val()))){
+								objectNum++;
+								$("<tr id='R"+objectNum+"'><td>"+$.trim($("#insertarow_id").val())+"</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>").insertAfter($("#R"+(objectNum-1)));
+								$("#insertarow_id").val("");
+							}
+							else {$("#insertarow_id").val("");return;}
+							
+							$("#R"+objectNum+" td").mouseover(function(){
+								$(this).css({backgroundColor:"#cccccc"});
+							});
+							$("#R"+objectNum+" td").mouseout(function(){
+								$(this).css({backgroundColor:"#eeeeee"});
+							});
+							editableGrid = new EditableGrid("DemoGrid",{
+								modelChanged: function(rowIdx, colIdx, oldValue, newValue, row){
+									_$("message").innerHTML="rowIdx="+rowIdx+",colIdx="+colIdx+",oldValue="+oldValue+",newValue="+newValue+",row="+row;
+									$("#R"+(rowIdx+1)+" td:nth-child("+(colIdx+1)+")").css({backgroundColor:"lightgreen"});
+									$("#R"+(rowIdx+1)+" td:nth-child("+(colIdx+1)+")").unbind("mouseover");
+									$("#R"+(rowIdx+1)+" td:nth-child("+(colIdx+1)+")").unbind("mouseout");
+								}
+							});
+							editableGrid.load(
+								{ metadata: [
+									{ name: "id", datatype: "string", editable: false },
+									{ name: "username", datatype: "string", editable: true },
+									{ name: "lastymd", datatype: "string", editable: true },
+									{ name: "reflectflg", datatype: "string", editable: true }
+									//If you do not want to affect a cell by EditableGrid, then you should comment out the corresponding JSON object from the source.
+								]}
+							);
+							editableGrid.attachToHTMLTable('htmlgrid');
+							editableGrid.renderGrid();
+							
+							selectRow(objectNum);
+						});
+						
+						selectRow(objectNum);
+		    		}
+		    		
+		    		//Here is a code to fix the row which will be operated in some way.
+		    		function selectRow(num){
+						for (i=1;i<=num;i++){
+							$("#htmlgrid tr#R"+i+" td:first").click(function(i){
+								if ($.inArray($(this).get()[0].firstChild.nodeValue+i,selectedRows)==-1){
+									selectedRows.push($(this).get()[0].firstChild.nodeValue+i);
+								}// If selectedRows does not have $(this).get()[0].firstChild.nodeValue+i as an element, then we push it to selectedRows.
+								else {
+									selectedRows.splice($.inArray($(this).get()[0].firstChild.nodeValue+i,selectedRows),1);
+								}// If selectedRows has $(this).get()[0].firstChild.nodeValue+i, then we remove it from selectedRows.
+								parent = $(this).parent();
+								k = parent.get()[0].getElementsByTagName("td").length;
+								for (j=0;j<k;j++){
+									if (parent.get()[0].getElementsByTagName("td")[j].style.backgroundColor!="yellow"){
+										parent.get()[0].getElementsByTagName("td")[j].style.backgroundColor = "yellow";
+										parent.children().unbind("mouseover");//Getting rid of the mouseover event from <td> elements of each row.
+										parent.children().unbind("mouseout");//Getting rid of the mouseout event from <td> elements of each row.
+									}
+									else {
+										parent.get()[0].getElementsByTagName("td")[j].style.backgroundColor = "#eeeeee";
+										
+										parent.children().mouseover(function(){
+											$(this).css({backgroundColor:"#cccccc"});
+										});
+										parent.children().mouseout(function(){
+											$(this).css({backgroundColor:"#eeeeee"});
+										});
+									}
+								}
+
+							});
+						}
+		    		}
+		    	//-->
+		    </script>
     </head>
-    <script type="text/javascript" src="./conf/jquery-1.7.1.js"></script>
-    <script type="text/javascript" src="./conf/editablegrid.js"></script>
-    <script type="text/javascript" src="./conf/editablegrid_charts.js"></script>
-    <script type="text/javascript" src="./conf/editablegrid_editors.js"></script>
-    <script type="text/javascript" src="./conf/editablegrid_renderers.js"></script>
-    <script type="text/javascript" src="./conf/editablegrid_utils.js"></script>
-    <script type="text/javascript" src="./conf/editablegrid_validators.js"></script>
-    <script type="text/javascript">
-    	<!--
-    		
-    		window.onload=function(){
-				editableGrid = new EditableGrid("DemoGrid",{
-					modelChanged: function(rowIdx, colIdx, oldValue, newValue, row){
-						_$("message").innerHTML="rowIdx="+rowIdx+",colIdx="+colIdx+",oldValue="+oldValue+",newValue="+newValue+",row="+row;
-						$("#R"+(rowIdx+1)+" td:nth-child("+(colIdx+1)+")").css({backgroundColor:"lightgreen"});
-						$("#R"+(rowIdx+1)+" td:nth-child("+(colIdx+1)+")").unbind("mouseover");
-						$("#R"+(rowIdx+1)+" td:nth-child("+(colIdx+1)+")").unbind("mouseout");
-					}
-				}); 
 
-				// we build and load the metadata in Javascript
-				editableGrid.load(
-					{ metadata: [
-						{ name: "id", datatype: "string", editable: false },
-						{ name: "username", datatype: "string", editable: true },
-						{ name: "lastymd", datatype: "string", editable: true },
-						{ name: "reflectflg", datatype: "string", editable: true }
-						//If you do not want to affect a cell by EditableGrid, then you should comment out the corresponding JSON object from the source.
-						//{ name: "letuscheck", datatype: "string", editable: false }
-					]}
-				);
-
-				// then we attach to the HTML table and render it
-				editableGrid.attachToHTMLTable('htmlgrid');
-				editableGrid.renderGrid();
-				
-				//Here is a code to change the color of the cell on which one puts the mouse cursor.
-				<?php
-					$j=0;
-					for ($i=0;isset($batchObj->ITEM[$i]);$i++,$j++){}
-				?>
-				var objectNum = <?php echo $j; ?>;
-				for (i=1;i<=objectNum;i++){
-					$("#R"+i+" td").mouseover(function(){
-						$(this).css({backgroundColor:"#cccccc"});
-					});
-					$("#R"+i+" td").mouseout(function(){
-						$(this).css({backgroundColor:"#eeeeee"});
-					});
-				}
-				
-				//Here is a code to insert the next element <tr> to the table "htmlgrid".
-				$("#insertarow").click(function(){
-					//Insert the new row #R+objectNum below the row #R+(objectNum-1)
-					if (/^[A-Z][0-9]{5}$/.test($.trim($("#insertarow_id").val()))){
-						objectNum++;
-						$("<tr id='R"+objectNum+"'><td>"+$.trim($("#insertarow_id").val())+"</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>").insertAfter($("#R"+(objectNum-1)));
-						$("#insertarow_id").val("");
-					}
-					else {$("#insertarow_id").val("");return;}
-					
-					$("#R"+objectNum+" td").mouseover(function(){
-						$(this).css({backgroundColor:"#cccccc"});
-					});
-					$("#R"+objectNum+" td").mouseout(function(){
-						$(this).css({backgroundColor:"#eeeeee"});
-					});
-					editableGrid = new EditableGrid("DemoGrid",{
-						modelChanged: function(rowIdx, colIdx, oldValue, newValue, row){
-							_$("message").innerHTML="rowIdx="+rowIdx+",colIdx="+colIdx+",oldValue="+oldValue+",newValue="+newValue+",row="+row;
-							$("#R"+(rowIdx+1)+" td:nth-child("+(colIdx+1)+")").css({backgroundColor:"lightgreen"});
-							$("#R"+(rowIdx+1)+" td:nth-child("+(colIdx+1)+")").unbind("mouseover");
-							$("#R"+(rowIdx+1)+" td:nth-child("+(colIdx+1)+")").unbind("mouseout");
-						}
-					});
-					editableGrid.load(
-						{ metadata: [
-							{ name: "id", datatype: "string", editable: false },
-							{ name: "username", datatype: "string", editable: true },
-							{ name: "lastymd", datatype: "string", editable: true },
-							{ name: "reflectflg", datatype: "string", editable: true }
-							//If you do not want to affect a cell by EditableGrid, then you should comment out the corresponding JSON object from the source.
-						]}
-					);
-					editableGrid.attachToHTMLTable('htmlgrid');
-					editableGrid.renderGrid();
-					
-					selectRow(objectNum);
-				});
-				
-				selectRow(objectNum);
-    		}
-    		
-    		//Here is a code to fix the row which will be operated in some way.
-    		function selectRow(num){
-				for (i=1;i<=num;i++){
-					$("#htmlgrid tr#R"+i+" td:first").click(function(i){
-						//alert($(this).get()[0].firstChild.nodeValue);
-						k = $(this).parent().get()[0].getElementsByTagName("td").length;
-						for (j=0;j<k;j++){
-							$(this).parent().get()[0].getElementsByTagName("td")[j].style.backgroundColor = "yellow";
-						}
-						$(this).parent().children().unbind("mouseover");//Getting rid of the mouseover event from <td> elements of each row.
-						$(this).parent().children().unbind("mouseout");//Getting rid of the mouseout event from <td> elements of each row.
-					});
-				}
-    		}
-    	//-->
-    </script>
     <body>
 
        <!--All Rights Reserved By Salad's Di Gi Charat Fan Page-->
@@ -275,14 +309,17 @@
        			</td>
        		</tr>
        </table>
-       <table id="htmlgrid" border="1" cellpadding="5" cellspacing="0" width="1200" style="border-style:solid;border-width:2px;border-color:#666666;background-color:#eeeeee;">
-       		<tr>
-       			<td style="background-color:#666666;color:white;">ID</td>
-       			<td style="background-color:#666666;color:white;">ユーザ名</td>
-       			<td style="background-color:#666666;color:white;">最終チェック日</td>
-       			<td style="background-color:#666666;color:white;">反映済フラグ</td>
-       			<td style="background-color:#666666;color:white;">このユーザの状況を確認する</td>
-       		</tr>
+       <table id="htmlgrid" border="1" cellpadding="5" cellspacing="0" width="1200" style="border-style:solid;border-width:2px;border-color:#666666;background-color:#eeeeee;" class="persist-area">
+       		<thead>
+	       		<tr class="persist-header">
+	       			<td style="background-color:#666666;color:white;">ID</td>
+	       			<td style="background-color:#666666;color:white;">ユーザ名</td>
+	       			<td style="background-color:#666666;color:white;">最終チェック日</td>
+	       			<td style="background-color:#666666;color:white;">反映済フラグ</td>
+	       			<td style="background-color:#666666;color:white;">このユーザの状況を確認する</td>
+	       		</tr>
+       		</thead>
+       		<tbody>
        <?php
 
 			
@@ -302,6 +339,7 @@
 			}//例外発生時
 
        ?>
+       		</tbody>
        </table>
        <table border="0" width="1200">
        		<tr>
