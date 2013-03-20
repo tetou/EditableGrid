@@ -89,6 +89,7 @@
            <meta name="reply-to" content="americachachacha@yahoo.co.jp" />
            <title>TwitterBot(サスペンドフォロワー検索)</title>
            <link rel="stylesheet" type="text/css" href="../diary1.css" />
+           <link rel="stylesheet" type="text/css" href="conf/themes/base/jquery.ui.all.css" />
 	   	   <link rel="SHORTCUT ICON" href="http://www.geocities.jp/chocola_blancmanche10/favicon.ico" />
            <link rev="made" href="mailto:americachachacha@yahoo.co.jp" />
            <style type="text/css">
@@ -97,8 +98,16 @@
 				    top: 0;
 				    visibility: hidden;
 				}
+				
+				table#htmlgrid td.hover {
+					background:#cffbfb;
+				}
+				table#htmlgrid td.hover:hover {
+					background:#84f4f4;
+				}
            </style>
 		    <script type="text/javascript" src="./conf/jquery-1.7.1.js"></script>
+		    <script type="text/javascript" src="./conf/jquery-ui.min.js"></script>
 		    <script type="text/javascript" src="./conf/editablegrid.js"></script>
 		    <script type="text/javascript" src="./conf/editablegrid_charts.js"></script>
 		    <script type="text/javascript" src="./conf/editablegrid_editors.js"></script>
@@ -125,10 +134,10 @@
 						// we build and load the metadata in Javascript
 						editableGrid.load(
 							{ metadata: [
-								{ name: "id", datatype: "string", editable: false },
-								{ name: "username", datatype: "string", editable: true },
-								{ name: "lastymd", datatype: "string", editable: true },
-								{ name: "reflectflg", datatype: "string", editable: true }
+								{ name: "id", datatype: "html", editable: false },
+								{ name: "username", datatype: "html", editable: true },
+								{ name: "lastymd", datatype: "html", editable: true },
+								{ name: "reflectflg", datatype: "html", editable: true }
 								//If you do not want to affect a cell by EditableGrid, then you should comment out the corresponding JSON object from the source.
 								//{ name: "letuscheck", datatype: "string", editable: false }
 							]}
@@ -148,12 +157,14 @@
 						?>
 						var objectNum = <?php echo $j; ?>;
 						for (i=1;i<=objectNum;i++){
+							/*
 							$("#R"+i+" td").mouseover(function(){
 								$(this).css({backgroundColor:"#cccccc"});
 							});
 							$("#R"+i+" td").mouseout(function(){
 								$(this).css({backgroundColor:"#eeeeee"});
 							});
+							*/
 						}
 						
 						//Here is a code to insert the next element <tr> to the table "htmlgrid".
@@ -166,12 +177,14 @@
 							}
 							else {$("#insertarow_id").val("");return;}
 							
+							/*
 							$("#R"+objectNum+" td").mouseover(function(){
 								$(this).css({backgroundColor:"#cccccc"});
 							});
 							$("#R"+objectNum+" td").mouseout(function(){
 								$(this).css({backgroundColor:"#eeeeee"});
 							});
+							*/
 							editableGrid = new EditableGrid("DemoGrid",{
 								modelChanged: function(rowIdx, colIdx, oldValue, newValue, row){
 									_$("message").innerHTML="rowIdx="+rowIdx+",colIdx="+colIdx+",oldValue="+oldValue+",newValue="+newValue+",row="+row;
@@ -196,6 +209,9 @@
 						});
 						
 						selectRow(objectNum);
+						
+						//Resizing Settings
+						$('#htmlgrid_1').resizable();
 		    		}
 		    		
 		    		//Here is a code to fix the row which will be operated in some way.
@@ -218,19 +234,22 @@
 									}
 									else {
 										parent.get()[0].getElementsByTagName("td")[j].style.backgroundColor = "#eeeeee";
-										
+										/*
 										parent.children().mouseover(function(){
 											$(this).css({backgroundColor:"#cccccc"});
 										});
 										parent.children().mouseout(function(){
 											$(this).css({backgroundColor:"#eeeeee"});
 										});
+										*/
 									}
 								}
 
 							});
 						}
 		    		}
+
+
 		    	//-->
 		    </script>
     </head>
@@ -312,11 +331,11 @@
        <table id="htmlgrid" border="1" cellpadding="5" cellspacing="0" width="1200" style="border-style:solid;border-width:2px;border-color:#666666;background-color:#eeeeee;" class="persist-area">
        		<thead>
 	       		<tr class="persist-header">
-	       			<td style="background-color:#666666;color:white;">ID</td>
-	       			<td style="background-color:#666666;color:white;">ユーザ名</td>
-	       			<td style="background-color:#666666;color:white;">最終チェック日</td>
-	       			<td style="background-color:#666666;color:white;">反映済フラグ</td>
-	       			<td style="background-color:#666666;color:white;">このユーザの状況を確認する</td>
+	       			<th style="background-color:#666666;color:white;" id="htmlgrid_1" class="ui-resizable">ID&nbsp;&nbsp;<div class="ui-resizable-handle ui-resizable-e" style=""></div></th>
+	       			<th style="background-color:#666666;color:white;">ユーザ名</th>
+	       			<th style="background-color:#666666;color:white;">最終チェック日</th>
+	       			<th style="background-color:#666666;color:white;">反映済フラグ</th>
+	       			<th style="background-color:#666666;color:white;">このユーザの状況を確認する</th>
 	       		</tr>
        		</thead>
        		<tbody>
